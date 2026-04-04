@@ -17,8 +17,27 @@
   <link rel="icon" type="image/x-icon" href="./assets/GUI.svg">
     <link rel="stylesheet" href="./css/theme.css" />
   <style>
+  :root {
+    --sidebar-width: 240px;
+    --sidebar-collapsed-width: 72px;
+  }
+
   body { font-family: 'Courier New', monospace; background: #000; }
   .dashboard-border { border: 2px solid #fff; background: #000; }
+
+  #sidebar {
+    z-index: 60;
+  }
+
+  #mainTopBar {
+    left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+  }
+
+  #sidebar.collapsed ~ #mainTopBar {
+    left: var(--sidebar-collapsed-width);
+    width: calc(100% - var(--sidebar-collapsed-width));
+  }
 
     .digital-display {
       position: absolute; top: 0.5rem; right: 0.5rem;
@@ -122,6 +141,13 @@
   transition: all 0.3s ease;
 }
 
+@media (max-width: 1080px) {
+  #mainTopBar {
+    left: var(--sidebar-collapsed-width);
+    width: calc(100% - var(--sidebar-collapsed-width));
+  }
+}
+
   </style>
 </head>
 
@@ -135,15 +161,15 @@
       <nav class="nav-list">
         <a class="nav-item" href="index.html"><span class="nav-icon"></span><span class="nav-label">Home</span></a>
         <a class="nav-item" href="./routes/sensors.html"><span class="nav-icon"></span><span class="nav-label">Sensors</span></a>
-        <a class="nav-item" href="gps.html"><span class="nav-icon"></span><span class="nav-label">GPS</span></a>
-        <a class="nav-item" href="gyro.html"><span class="nav-icon"></span><span class="nav-label">Gyro</span></a>
-        <a class="nav-item" href="communication.html"><span class="nav-icon"></span><span class="nav-label">Communication</span></a>
+        <a class="nav-item" href="./routes/gps.html"><span class="nav-icon"></span><span class="nav-label">GPS</span></a>
+        <a class="nav-item" href="./routes/gyro.html"><span class="nav-icon"></span><span class="nav-label">Gyro</span></a>
+        <a class="nav-item" href="./routes/communication.html"><span class="nav-icon"></span><span class="nav-label">Communication</span></a>
       </nav>
     </aside>
-  <div class="fixed top-0 w-full z-50 bg-black text-white py-2 px-4 shadow min-h-[64px] flex items-center border-radius-lg">
+  <div id="mainTopBar" class="fixed top-0 z-40 bg-black text-white py-2 px-4 shadow min-h-[64px] flex items-center border-radius-lg">
     <div class="flex items-center text-sm font-mono w-full relative justify-center">
      <!-- Left Section -->
-    <div class="absolute top-2 left-4 flex items-center gap-x-8">
+    <div class="relative top-2 left-4 flex items-center gap-x-8">
       <img src="./assets/file.jpg" alt="Left Logo" class="h-10 w-10 object-contain" />
       <li>
       <span id="signal" style="display: inline-block; min-width: 70px; text-align: left;">SIGNAL: --</span>
