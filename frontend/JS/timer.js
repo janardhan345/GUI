@@ -10,5 +10,8 @@ setInterval(() => {
 
     setInterval(() => {
       const now = new Date();
-      document.getElementById("gnssTime").textContent = now.toLocaleTimeString('en-GB');
+      const gnssTimeEl = document.getElementById("gnssTime");
+      if (gnssTimeEl) {
+        gnssTimeEl.textContent = now.toLocaleTimeString('en-GB');
+      }
     }, 1000);
