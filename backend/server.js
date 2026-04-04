@@ -6,7 +6,7 @@ const io = require('socket.io')(server, {
   cors: { origin: "*" }
 });
 
-const frontendDir = path.join(__dirname, '..', 'Frontend');
+const frontendDir = path.join(__dirname, '..', 'frontend');
 
 
 app.use(express.static(frontendDir));
