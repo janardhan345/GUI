@@ -1,3 +1,6 @@
+if (typeof io === 'undefined') {
+  console.error('Socket.IO client is not loaded.');
+} else {
 const socket = io('http://localhost:3000');
 
 const statusElement = document.getElementById('status');
@@ -33,13 +36,13 @@ socket.on('disconnect', () => {
 
 socket.on('serial_config', (config) => {
   const baudElem = document.getElementById('baudRate');
-  const portElem = document.getElementById('port-display');
+  const portElem = document.getElementById('port-display') || document.getElementById('portDisplay');
   if (baudElem && config?.baudRate !== undefined) baudElem.textContent = config.baudRate;
   if (portElem && config?.port !== undefined) portElem.textContent = config.port;
 });
 
 socket.on('port_detected', (data) => {
-  const portElem = document.getElementById('port-display');
+  const portElem = document.getElementById('port-display') || document.getElementById('portDisplay');
   if (portElem && data?.port) {
     portElem.textContent = data.port;
   }
@@ -51,3 +54,4 @@ socket.on('new_data', (data) => {
     window.handleTelemetryUpdate(data);
   }
 });
+}

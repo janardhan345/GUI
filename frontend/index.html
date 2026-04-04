@@ -15,24 +15,11 @@
   <script src="./node_modules/three/examples/js/loaders/OBJLoader.js"></script>
   <script src="./node_modules/three/examples/js/controls/OrbitControls.js"></script>
   <link rel="icon" type="image/x-icon" href="./assets/GUI.svg">
+    <link rel="stylesheet" href="./css/theme.css" />
   <style>
   body { font-family: 'Courier New', monospace; background: #000; }
   .dashboard-border { border: 2px solid #fff; background: #000; }
-    /* Download Button Styles */
-    #downloadDataBtn {
-      transition: all 0.3s ease;
-      z-index: 1000;
-    }
-    #downloadDataBtn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    }
-    #downloadDataBtn svg {
-      transition: transform 0.2s ease;
-    }
-    #downloadDataBtn:hover svg {
-      transform: translateY(2px);
-    }
+
     .digital-display {
       position: absolute; top: 0.5rem; right: 0.5rem;
   background: rgba(0,0,0,0.8); color: #fff; font-size: 0.75rem;
@@ -139,6 +126,20 @@
 </head>
 
 <body class="bg-[#0D0B30] text-white min-h-screen p-4">
+  <div class="app-shell">
+        <aside id="sidebar" class="sidebar">
+      <div class="sidebar-head">
+        <span class="sidebar-title">TEAM INVINCIBLE</span>
+        <button id="sidebarCollapseBtn" class="collapse-btn"><</button>
+      </div>
+      <nav class="nav-list">
+        <a class="nav-item" href="index.html"><span class="nav-icon"></span><span class="nav-label">Home</span></a>
+        <a class="nav-item" href="./routes/sensors.html"><span class="nav-icon"></span><span class="nav-label">Sensors</span></a>
+        <a class="nav-item" href="gps.html"><span class="nav-icon"></span><span class="nav-label">GPS</span></a>
+        <a class="nav-item" href="gyro.html"><span class="nav-icon"></span><span class="nav-label">Gyro</span></a>
+        <a class="nav-item" href="communication.html"><span class="nav-icon"></span><span class="nav-label">Communication</span></a>
+      </nav>
+    </aside>
   <div class="fixed top-0 w-full z-50 bg-black text-white py-2 px-4 shadow min-h-[64px] flex items-center border-radius-lg">
     <div class="flex items-center text-sm font-mono w-full relative justify-center">
      <!-- Left Section -->
@@ -343,6 +344,7 @@
     </div>
     
     </div>
+  </div>
 
   <script src="./JS/chart.js"></script>
   <script src="./JS/index.js"></script>

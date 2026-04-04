@@ -27,7 +27,10 @@ window.vectorMagnitude = function vectorMagnitude(x, y, z) {
 };
 
 function createRealtimeChart(id, label, color, unit) {
-  return new Chart(document.getElementById(id), {
+  const el = document.getElementById(id);
+  if (!el) return null;
+
+  return new Chart(el, {
     type: 'line',
     data: {
       datasets: [{
@@ -74,84 +77,54 @@ document.addEventListener('DOMContentLoaded', function() {
     humidity: createRealtimeChart('humidityChart', 'Humidity', chartColors.humidity, chartUnits.humidity)
   };
 
-  window.charts.pressure.options.scales.y.ticks.callback = function(val) {
-    return parseFloat(val).toFixed(3) + ' ' + chartUnits.pressure;
-  };
+  if (window.charts.pressure) {
+    window.charts.pressure.options.scales.y.ticks.callback = function(val) {
+      return parseFloat(val).toFixed(3) + ' ' + chartUnits.pressure;
+    };
+  }
 
   const packetCount = document.getElementById('packetCount');
   if (packetCount) {
     packetCount.textContent = '0';
   }
 
-  window.batteryVoltageChart = new Chart(document.getElementById('batteryVoltageChart'), {
-    type: 'bar',
-    data: {
-      labels: ['Voltage'],
-      datasets: [{
-        data: [0],
-        backgroundColor: '#3b82f6',
-        borderColor: '#3b82f6',
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { display: false },
-        y: { beginAtZero: true, max: 5, ticks: { color: '#ffffff' } }
-      }
-    }
-  });
+  function createBarChart(id, max, color, label) {
+    const el = document.getElementById(id);
+    if (!el) return null;
 
-  window.batteryCurrentChart = new Chart(document.getElementById('batteryCurrentChart'), {
-    type: 'bar',
-    data: {
-      labels: ['Current'],
-      datasets: [{
-        data: [0],
-        backgroundColor: '#f97316',
-        borderColor: '#f97316',
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { display: false },
-        y: { beginAtZero: true, max: 2000, ticks: { color: '#ffffff' } }
+    return new Chart(el, {
+      type: 'bar',
+      data: {
+        labels: [label],
+        datasets: [{
+          data: [0],
+          backgroundColor: color,
+          borderColor: color,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { display: false },
+          y: { beginAtZero: true, max: max, ticks: { color: '#ffffff' } }
+        }
       }
-    }
-  });
+    });
+  }
 
-  window.powerChart = new Chart(document.getElementById('powerChart'), {
-    type: 'bar',
-    data: {
-      labels: ['Power'],
-      datasets: [{
-        data: [0],
-        backgroundColor: '#10b981',
-        borderColor: '#10b981',
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { display: false },
-        y: { beginAtZero: true, max: 10, ticks: { color: '#ffffff' } }
-      }
-    }
-  });
+  window.batteryVoltageChart = createBarChart('batteryVoltageChart', 5, '#3b82f6', 'Voltage');
+  window.batteryCurrentChart = createBarChart('batteryCurrentChart', 2000, '#f97316', 'Current');
+  window.powerChart = createBarChart('powerChart', 10, '#10b981', 'Power');
 
   const axisColors = { x: '#f87171', y: '#60a5fa', z: '#34d399' };
   function create3AxisChart(id, label, unit) {
-    return new Chart(document.getElementById(id), {
+    const el = document.getElementById(id);
+    if (!el) return null;
+
+    return new Chart(el, {
       type: 'line',
       data: {
         datasets: [
