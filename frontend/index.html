@@ -81,6 +81,13 @@
     width: calc(100% - var(--sidebar-collapsed-width));
   }
 
+  #dashboardGrid {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    transition: width 0.2s ease;
+  }
+
     .digital-display {
       position: absolute; top: 0.5rem; right: 0.5rem;
   background: rgba(0,0,0,0.8); color: #fff; font-size: 0.75rem;
@@ -201,11 +208,13 @@
         <button id="sidebarCollapseBtn" class="collapse-btn"><</button>
       </div>
       <nav class="nav-list">
-        <a class="nav-item" href="index.html"><span class="nav-icon"></span><span class="nav-label">Home</span></a>
-        <a class="nav-item" href="./routes/sensors.html"><span class="nav-icon"></span><span class="nav-label">Sensors</span></a>
-        <a class="nav-item" href="./routes/gps.html"><span class="nav-icon"></span><span class="nav-label">GPS</span></a>
-        <a class="nav-item" href="./routes/gyro.html"><span class="nav-icon"></span><span class="nav-label">Gyro</span></a>
-        <a class="nav-item" href="./routes/communication.html"><span class="nav-icon"></span><span class="nav-label">Communication</span></a>
+        <a class="nav-item" href="index.html"><span class="nav-icon">
+          <img src="./assets/home.svg" alt="home"/>
+        </span><span class="nav-label">Home</span></a>
+        <a class="nav-item" href="./routes/sensors.html"><span class="nav-icon"><img src="./assets/sensor.svg" alt="home"/></span><span class="nav-label">Sensors</span></a>
+        <a class="nav-item" href="./routes/gps.html"><span class="nav-icon"><img src="./assets/GPS.svg" alt="home"/></span><span class="nav-label">GPS</span></a>
+        <a class="nav-item" href="./routes/gyro.html"><span class="nav-icon"><img src="./assets/gyro.svg" alt="home"/></span><span class="nav-label">Gyro</span></a>
+        <a class="nav-item" href="./routes/communication.html"><span class="nav-icon"><img src="./assets/comms.svg" alt="home"/></span><span class="nav-label">Communication</span></a>
       </nav>
     </aside>
   <div id="mainTopBar" class="fixed top-0 z-40 bg-black text-white py-2 px-4 shadow min-h-[64px] flex items-center border-radius-lg">
@@ -233,7 +242,7 @@
   
 
   <!-- Dashboard Grid -->
-  <div class="pt-24 grid grid-cols-12 gap-4 h-[calc(100vh-120px)]">
+  <div id="dashboardGrid" class="pt-24 grid grid-cols-12 gap-4 h-[calc(100vh-120px)]">
     <!-- Pressure Chart -->
     <div class="col-span-3 dashboard-border p-4 text-center relative flex flex-col items-center justify-center">
       <div class="font-bold mb-2">Pressure</div>
