@@ -343,10 +343,14 @@ class SatelliteVisualization {
         this.animationId = requestAnimationFrame(() => this.animate());
         
         // Update controls
-        this.controls.update();
+        if (this.controls) {
+            this.controls.update();
+        }
         
         // Render the scene
-        this.renderer.render(this.scene, this.camera);
+        if (this.renderer && this.scene && this.camera) {
+            this.renderer.render(this.scene, this.camera);
+        }
     }
     
     onWindowResize() {
@@ -392,6 +396,22 @@ class SatelliteVisualization {
             loadingDiv.remove();
         }
     }
+
+    showError(message) {
+        if (!this.container) return;
+        this.container.innerHTML = `
+            <div style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                color: #ff6666;
+                font-family: monospace;
+                text-align: center;
+                padding: 1rem;
+            ">${message}</div>
+        `;
+    }
     
     showErrorMessage() {
         const errorDiv = document.createElement('div');
@@ -419,8 +439,11 @@ class SatelliteVisualization {
     
     // Public methods for external control
     resetView() {
+        if (!this.camera) return;
         this.camera.position.set(5, 5, 5);
-        this.controls.reset();
+        if (this.controls) {
+            this.controls.reset();
+        }
     }
     
     toggleWireframe() {
@@ -448,7 +471,9 @@ class SatelliteVisualization {
         }
         
         // Remove event listeners
-        window.removeEventListener('resize', this.onWindowResize);
+        if (this.resizeHandler) {
+            window.removeEventListener('resize', this.resizeHandler);
+        }
     }
     
     addStarsBackground() {

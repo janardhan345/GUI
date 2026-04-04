@@ -4,6 +4,15 @@ let satelliteVisualization = null;
     // Initialize the 3D satellite visualization
     function initializeSatelliteVisualization() {
       try {
+        if (typeof THREE === 'undefined' || typeof SatelliteVisualization === 'undefined') {
+          return false;
+        }
+
+        const container = document.getElementById('satellite3d');
+        if (!container) {
+          return false;
+        }
+
         satelliteVisualization = new SatelliteVisualization('satellite3d');
         
         // Add button event listeners
@@ -35,9 +44,11 @@ let satelliteVisualization = null;
         });
         
         console.log('3D Satellite visualization initialized successfully');
+        return true;
       } catch (error) {
         console.error('Failed to initialize 3D satellite visualization:', error);
         // Fallback to 2D representation could be added here
+        return false;
       }
     }
 
@@ -94,8 +105,22 @@ let satelliteVisualization = null;
     
     // Initialize the 3D visualization when the DOM is ready
     document.addEventListener('DOMContentLoaded', function() {
-      // Add a small delay to ensure Three.js is loaded
-      setTimeout(() => {
-        initializeSatelliteVisualization();
-      }, 100);
+      let attempts = 0;
+      const maxAttempts = 25;
+
+      const tryInit3D = () => {
+        if (satelliteVisualization) return;
+
+        const initialized = initializeSatelliteVisualization();
+        if (initialized) return;
+
+        attempts += 1;
+        if (attempts < maxAttempts) {
+          setTimeout(tryInit3D, 200);
+        } else {
+          console.error('Satellite orientation view failed to initialize. Check Three.js loading.');
+        }
+      };
+
+      tryInit3D();
     });

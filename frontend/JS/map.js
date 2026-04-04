@@ -1,10 +1,17 @@
-initMap();
-
 // --- Map and Timer Code (unchanged) ---
     let map, currentMarker, pathPolyline;
     let pathCoordinates = [];
 
     function initMap() {
+      if (typeof L === 'undefined') {
+        return false;
+      }
+
+      const mapContainer = document.getElementById('map');
+      if (!mapContainer) {
+        return false;
+      }
+
       const defaultLat = 13.7331, defaultLon = 80.2047;
       map = L.map("map").setView([defaultLat, defaultLon], 13);
 
@@ -33,11 +40,35 @@ initMap();
         .openPopup();
 
       pathPolyline = L.polyline([], { color: "red", weight: 3 }).addTo(map);
+      return true;
     }
 
+    document.addEventListener('DOMContentLoaded', () => {
+      let attempts = 0;
+      const maxAttempts = 25;
+
+      const tryInitMap = () => {
+        if (map) return;
+        const isReady = initMap();
+        if (isReady) return;
+
+        attempts += 1;
+        if (attempts < maxAttempts) {
+          setTimeout(tryInitMap, 200);
+        } else {
+          console.error('Leaflet failed to initialize. Check script loading and launch method.');
+        }
+      };
+
+      tryInitMap();
+    });
+
     function updateMap(lat, lon, alt) {
-      if (!map || !lat || !lon) return;
-      const newLatLng = [parseFloat(lat), parseFloat(lon)];
+      if (!map || lat === undefined || lon === undefined || lat === null || lon === null) return;
+      const parsedLat = parseFloat(lat);
+      const parsedLon = parseFloat(lon);
+      if (Number.isNaN(parsedLat) || Number.isNaN(parsedLon)) return;
+      const newLatLng = [parsedLat, parsedLon];
 
       currentMarker.setLatLng(newLatLng);
       currentMarker.setPopupContent(`Rocket Location<br>Lat: ${lat}<br>Lon: ${lon}<br>Alt: ${alt}M`);
