@@ -3,20 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CANSAT GUI</title>
-  <!-- External Libraries -->
-  <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script> <!-- socket IO -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- chart JS -->
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script> <!-- chart JS adapter for date fns -->
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming"></script> <!-- chart JS plugin for streaming -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> <!-- tailwind CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/> <!-- leaflet CSS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script> <!-- leaflet JS -->
-  
-  <!-- Three.js Libraries -->
-  <script src="https://unpkg.com/three@0.145.0/build/three.min.js"></script>
-  <script src="https://unpkg.com/three@0.145.0/examples/js/loaders/OBJLoader.js"></script>
-  <script src="https://unpkg.com/three@0.145.0/examples/js/controls/OrbitControls.js"></script>
+  <title>GUI</title>
+  <script src="./node_modules/socket.io-client/dist/socket.io.min.js"></script>
+  <script src="./node_modules/chart.js/dist/chart.min.js"></script>
+  <script src="./node_modules/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+  <script src="./node_modules/chartjs-plugin-streaming/dist/chartjs-plugin-streaming.min.js"></script>
+  <link href="./node_modules/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="./node_modules/leaflet/dist/leaflet.css"/>
+  <script src="./node_modules/leaflet/dist/leaflet.js"></script>
+  <script src="./node_modules/three/build/three.min.js"></script>
+  <script src="./node_modules/three/examples/js/loaders/OBJLoader.js"></script>
+  <script src="./node_modules/three/examples/js/controls/OrbitControls.js"></script>
   
   <style>
   body { font-family: 'Courier New', monospace; background: #000; }
@@ -122,6 +119,8 @@
 
 /* Realistic lighting */
 #satellite3d {
+  min-height: 320px;
+  height: 320px;
   filter: drop-shadow(5px 5px 15px rgba(0, 0, 0, 0.5));
 }
 
@@ -144,7 +143,7 @@
     <div class="flex items-center text-sm font-mono w-full relative justify-center">
      <!-- Left Section -->
     <div class="absolute top-2 left-4 flex items-center gap-x-8">
-      <img src="img/file.jpg" alt="Left Logo" class="h-10 w-10 object-contain" />
+      <img src="./assets/file.jpg" alt="Left Logo" class="h-10 w-10 object-contain" />
       <li>
       <span id="signal" style="display: inline-block; min-width: 70px; text-align: left;">SIGNAL: --</span>
       <span id="status">STATUS: DISCONNECTED</span>
@@ -163,7 +162,7 @@
 
       <!-- INSPACE Logo -->
       <div class="absolute right-64 top-1/2 transform -translate-y-1/2">
-        <img src="img/Inspace.png" alt="INSPACE Logo" class="h-12 object-contain">
+        <img src="./assets/Inspace.png" alt="INSPACE Logo" class="h-12 object-contain">
       </div>
     </div>
        
@@ -348,9 +347,10 @@
   <script src="./JS/chart.js"></script>
   <script src="./JS/index.js"></script>
   <script src="./JS/map.js"></script>
+  <script src="./JS/threejs-sat.js"></script>
   <script src="./JS/orientation.js"></script>
   <script src="./JS/telemetry_update-ui.js"></script>
-  <script src="./JS/threejs-sat.js"></script>
+  <script src="./JS/socket.js"></script>
   <script src="./JS/timer.js"></script>
   </body>
 </html>

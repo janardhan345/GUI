@@ -10,6 +10,7 @@ const frontendDir = path.join(__dirname, '..', 'frontend');
 
 
 app.use(express.static(frontendDir));
+app.use('/node_modules', express.static(path.join(frontendDir, 'node_modules')));
 app.use('/Backend', express.static(__dirname));
 
 app.get('/', (req, res) => {
