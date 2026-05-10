@@ -1,3 +1,30 @@
+require('dotenv').config();
+const { Pool } = require('pg');
+
+const databaseUrl = process.env.DATABASE_URL;
+const pool = databaseUrl ? new Pool({ connectionString: databaseUrl }) : null;
+let dbWarnShown = false;
+
+const insertTelemetrySql = `
+INSERT INTO telemetry_packets (
+  source, temperature, pressure, altitude, humidity, battery_voltage, battery_current, power,
+  gas_resistance, battery, latitude, longitude, gnss_altitude, packet_count,
+  primary_parachute, secondary_parachute,
+  accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z, mag_x, mag_y, mag_z,
+  signal, data_rate
+) VALUES (
+  $1,$2,$3,$4,$5,$6,$7,$8,
+  $9,$10,$11,$12,$13,$14,
+  $15,$16,
+  $17,$18,$19,$20,$21,$22,$23,$24,$25,
+  $26,$27
+);
+`;
+
+const toNum = (v) => {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+};
 const io = require('socket.io')(3000, {
   cors: { origin: "*" }
 });
@@ -66,14 +93,14 @@ setInterval(() => {
   // Get simulated GNSS altitude
   const gnssAltitude = simulateGNSSAltitude().toFixed(1);
   
-  io.emit("new_data", {
+  const packet = {
     team_id: "2024ASI-052",
     timestamp: Date.now(),
     temperature: pick(temperatureValues).toFixed(2),
     pressure: pick(pressureValues).toFixed(2),
     altitude: pick(altitudeValues).toFixed(2),
     humidity: pick(humidityValues).toFixed(2),
-    battery_voltage: voltage.toFixed(2),
+    voltage: voltage.toFixed(2),
     battery_current: current.toFixed(0),
     power: power, // Added power calculation
     gas_resistance: pick(gasResistanceValues).toFixed(0),
@@ -95,5 +122,49 @@ setInterval(() => {
     mag_z: (Math.random() * 100 - 50).toFixed(3),
     signal,
     data_rate
-  });
+  };
+
+  io.emit("new_data", packet);
+
+  // Save to DB (best-effort)
+  if (!pool) {
+    if (!dbWarnShown) {
+      console.log('DATABASE_URL not set; simulator will not save to DB.');
+      dbWarnShown = true;
+    }
+  } else {
+    const dbValues = [
+      'sim',
+      toNum(packet.temperature),
+      toNum(packet.pressure),
+      toNum(packet.altitude),
+      toNum(packet.humidity),
+      toNum(packet.battery_voltage ?? packet.voltage),
+      toNum(packet.battery_current),
+      toNum(packet.power),
+      toNum(packet.gas_resistance),
+      toNum(packet.battery),
+      toNum(packet.latitude),
+      toNum(packet.longitude),
+      toNum(packet.gnss_altitude),
+      toNum(packet.packet_count),
+      packet.primary_parachute ?? null,
+      packet.secondary_parachute ?? null,
+      toNum(packet.accel_x),
+      toNum(packet.accel_y),
+      toNum(packet.accel_z),
+      toNum(packet.gyro_x),
+      toNum(packet.gyro_y),
+      toNum(packet.gyro_z),
+      toNum(packet.mag_x),
+      toNum(packet.mag_y),
+      toNum(packet.mag_z),
+      toNum(packet.signal),
+      toNum(packet.data_rate),
+    ];
+
+    pool.query(insertTelemetrySql, dbValues).catch((err) => {
+      console.error('SIM DB insert error:', err.message);
+    });
+  }
 }, 1000);
