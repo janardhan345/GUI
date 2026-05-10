@@ -40,31 +40,77 @@ function handleSerialData(data) {
       return;
     }
     
-    const piFields = [
-      "team_id",      
-      "timestamp",    
-      "packet_count", 
-      "altitude",     
-      "pressure",     
-      "temperature",  
-      "voltage",      
-      "gnss_time",    
-      "latitude",     
-      "longitude",    
+    // Support multiple known CSV orders. Primary (piFieldsA) is the expected
+    // order; fallback (piFieldsB) covers older simulator format (temperature-first).
+    const piFieldsA = [
+      "team_id",
+      "timestamp",
+      "packet_count",
+      "altitude",
+      "pressure",
+      "temperature",
+      "voltage",
+      "gnss_time",
+      "latitude",
+      "longitude",
       "gnss_altitude",
-      "acceleration", 
-      "gyroscope",    
-      "magnetometer", 
-      "flight_state"  
+      "acceleration",
+      "gyroscope",
+      "magnetometer",
+      "flight_state",
     ];
-    const values = rawData.split(",");
-      const telemetryData = {};
 
-      piFields.forEach((key, i) => {
-        if (i < values.length) {
-          telemetryData[key] = values[i];
-        }
+    const piFieldsB = [
+      // older simulator order where telemetry begins with temperature
+      "team_id",
+      "timestamp",
+      "temperature",
+      "pressure",
+      "altitude",
+      "humidity",
+      "battery_voltage",
+      "battery_current",
+      "power",
+      "gas_resistance",
+      "battery",
+      "latitude",
+      "longitude",
+      "gnss_altitude",
+      "packet_count",
+      // extras: parachutes, accel/gyro/mag, signal, data_rate
+      "primary_parachute",
+      "secondary_parachute",
+      "accel_x",
+      "accel_y",
+      "accel_z",
+      "gyro_x",
+      "gyro_y",
+      "gyro_z",
+      "mag_x",
+      "mag_y",
+      "mag_z",
+      "signal",
+      "data_rate",
+    ];
+
+    const values = rawData.split(",");
+
+    function mapFields(values, fields) {
+      const out = {};
+      fields.forEach((k, i) => {
+        if (i < values.length && values[i] !== undefined) out[k] = values[i];
       });
+      return out;
+    }
+
+    // Try primary mapping first, then fallback mapping if temperature or altitude missing
+    let telemetryData = mapFields(values, piFieldsA);
+    const looksValidA = telemetryData.temperature !== undefined || telemetryData.altitude !== undefined;
+    if (!looksValidA) {
+      const tryB = mapFields(values, piFieldsB);
+      const looksValidB = tryB.temperature !== undefined || tryB.altitude !== undefined;
+      if (looksValidB) telemetryData = tryB;
+    }
       telemetryData.timestamp = Date.now();
 
       if (!telemetryData.humidity) {
