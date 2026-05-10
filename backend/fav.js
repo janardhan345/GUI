@@ -67,6 +67,8 @@ setInterval(() => {
   const gnssAltitude = simulateGNSSAltitude().toFixed(1);
   
   io.emit("new_data", {
+    team_id: "2024ASI-052",
+    timestamp: Date.now(),
     temperature: pick(temperatureValues).toFixed(2),
     pressure: pick(pressureValues).toFixed(2),
     altitude: pick(altitudeValues).toFixed(2),
