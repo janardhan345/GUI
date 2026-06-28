@@ -4,7 +4,6 @@
   document.getElementById('port-display').textContent = data.port;
 });
 
-
       socket.on('serial_config', (config) => {
         const baudElem = document.getElementById('baudRate');
         const portElem = document.getElementById('port');

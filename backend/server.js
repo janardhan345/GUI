@@ -5,6 +5,8 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server, {
   cors: { origin: "*" }
 });
+const { SerialPort } = require('serialport');
+const { ReadlineParser } = require('@serialport/parser-readline');
 
 const frontendDir = path.join(__dirname, '..', 'frontend');
 
@@ -21,8 +23,7 @@ server.listen(3000, () => {
   console.log('CanSat Ground Station Server Started on port 3000...');
   console.log('Waiting for telemetry data...');
 });
-const { SerialPort } = require('serialport');
-const { ReadlineParser } = require('@serialport/parser-readline');
+
 const defaultSerialPath = process.platform === 'win32' ? 'COM11' : '/dev/ttyUSB0';
 const serialPath = process.env.SERIAL_PORT || defaultSerialPath;
 const serialBaudRate = Number(process.env.BAUD_RATE || 9600);

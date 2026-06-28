@@ -1,7 +1,7 @@
 {
   "name": "y",
   "version": "1.0.0",
-  "description": "Simple GUI for Cansat ",
+  "description": "Real-time GUI for Cansat ",
   "license": "ISC",
   "author": "Janardhan345",
   "type": "commonjs",
